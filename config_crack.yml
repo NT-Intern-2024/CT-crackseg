@@ -1,7 +1,8 @@
 ## Config file
 lr:                     1e-4 # Initial learning rate
 
-# TODO: Fix
+# TODO: Set epoch
+
 # epochs:                 100 # Number of epochs to train the model 
 epochs:                 100 # Number of epochs to train the model 
 number_classes:         1 # Number of classes in the target dataset
@@ -12,7 +13,9 @@ batch_size_va:          1 # Batch size for validation
 saved_model:            './checkpoints/weights_stwcrack.model'
 saved_model_final:      './checkpoints/weights_stwcrack_final.model'
 
-# TODO: Add
+# TODO: Set dataset path
+# NOTE: ใช้ path_val เหมือนกับ path_test ก็ได้
+
 # path_to_tradata:        './DeepCrack/train' #path to dataset (./Crack500/train)
 # path_to_valdata:        './DeepCrack/test'  #path to dataset (./Crack500/test)
 # path_to_testdata:       './DeepCrack/test'  #path to dataset (./Crack500/val)

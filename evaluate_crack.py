@@ -85,14 +85,14 @@ config         = yaml.load(open('./config_crack.yml'), Loader=yaml.FullLoader)
 number_classes = int(config['number_classes'])
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# TODO: Debug
+# TODO: MyDebug
 print(f"Torch Device: {device}")
 
 data_path = config['path_to_testdata']
 DIR_IMG  = os.path.join(data_path, 'images')
 DIR_MASK = os.path.join(data_path, 'masks')
 
-# TODO: Fix
+# TODO: File extension
 img_names  = [path.name for path in Path(DIR_IMG).glob('*.JPG')]#Alex  .jpg -> .JPG
 mask_names = [path.name for path in Path(DIR_MASK).glob('*.JPG')]
 
@@ -105,13 +105,14 @@ print(f"mask_names: {mask_names}")
 test_dataset = Crack_loader(img_dir=DIR_IMG, img_fnames=img_names, mask_dir=DIR_MASK, mask_fnames=mask_names)
 test_loader  = DataLoader(test_dataset, batch_size = 1, shuffle= False)
 
-# TODO: Add
+# TODO: MyDebug
 print(f"test_path: {data_path}")
 print(f'test_dataset:{len(test_dataset)}')
 
 Net = TransMUNet(n_classes = number_classes)
 Net = Net.to(device)
-# TODO: Add
+
+# TODO: Load model (path)
 Net.load_state_dict(torch.load(config['saved_model'], map_location='cpu')['model_weights'])
 # Net.load_state_dict(torch.load(config['saved_model_final'], map_location='cpu')['model_weights'])
 # Net.load_state_dict(torch.load(config['saved_model_log'], map_location='cpu')['model_weights'])
@@ -156,14 +157,11 @@ with torch.no_grad():
         times += (end - start)
 
 
-        # TODO: Add - result name
+        # TODO: Export result (set name pattern)
         #file_name = f"Results-Thick3-200-e100-{get_filename_without_extension(img_path)}"
         file_name = f"Results-stwcrack-{get_filename_without_extension(img_path)}"
         if itter < 237 and save_samples:
-            # TODO: Change result name
-            # save_sample(img_path, msk.numpy()[0, 0], mskp, name=str(itter+1))
             save_sample(img_path, msk.numpy()[0, 0], mskp, name=file_name)
-
 
         gt_list.append(msk.numpy()[0, 0])
         pred_list.append(mskp)
