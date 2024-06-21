@@ -12,7 +12,7 @@ from utils.utils import get_img_patches, merge_pred_patches
 
 # TODO: Custom import
 from my_script import *
-from my_utils import *
+from my_classification import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output', type=str, default='./results.prf')
@@ -75,9 +75,8 @@ def save_sample(img_path, msk, msk_pred, name=''):
     axs[1].imshow(msk*255, cmap= 'gray')
 
     axs[2].axis('off')
-    # axs[2].imshow(mskp*255, cmap= 'gray')
-    axs[2].imshow(mskp, cmap= 'gray')
-
+    axs[2].imshow(mskp*255, cmap= 'gray')
+    # axs[2].imshow(mskp/255, cmap= 'gray')
 
     plt.savefig(config['save_result'] + name + '.png')
 
@@ -99,8 +98,9 @@ mask_names = [path.name for path in Path(DIR_MASK).glob('*.JPG')]
 # img_names  = [path.name for path in Path(DIR_IMG).glob('*.jpg')]
 # mask_names = [path.name for path in Path(DIR_MASK).glob('*.jpg')]
 
-print(f"img_names: {img_names}")
-print(f"mask_names: {mask_names}")
+print(f"Number of image")
+print(f"#img: {len(img_names)}")
+print(f"#mask: {len(mask_names)}")
 
 test_dataset = Crack_loader(img_dir=DIR_IMG, img_fnames=img_names, mask_dir=DIR_MASK, mask_fnames=mask_names)
 test_loader  = DataLoader(test_dataset, batch_size = 1, shuffle= False)
@@ -120,6 +120,9 @@ Net.load_state_dict(torch.load(config['saved_model'], map_location='cpu')['model
 pred_list = []
 gt_list = []
 save_samples = True # if save_samples=Flase, no samples will be saved.
+
+# TODO: Line Pred
+lines_pred = []
 
 with torch.no_grad():
     print('val_mode')
@@ -143,6 +146,7 @@ with torch.no_grad():
             mask = msk_pred.cpu().detach().numpy()[0, 0]             # (256, 256)
             preds.append(mask)
         mskp = merge_pred_patches(img, preds, patch_locs)            # (H, W)
+
         kernel = np.array(
                 [
                     [0, 0, 1, 0, 0],
@@ -151,22 +155,46 @@ with torch.no_grad():
                     [0, 1, 1, 1, 0],
                     [0, 0, 1, 0, 0],
                 ], dtype=np.uint8)
-        # mskp = cv2.morphologyEx(mskp, cv2.MORPH_CLOSE, kernel,iterations=1).astype(float)
+        mskp = cv2.morphologyEx(mskp, cv2.MORPH_CLOSE, kernel,iterations=1).astype(float)
         end = time.time()
         times += (end - start)
-
 
         # TODO: Add - result name
         #file_name = f"Results-Thick3-200-e100-{get_filename_without_extension(img_path)}"
         file_name = f"Results-stwcrack-{get_filename_without_extension(img_path)}"
+        # output_mask_path = f"mask/"
+
+        # TODO: Warning
+        color_threshold = 0.5
+        mskp = (mskp > color_threshold).astype(np.uint8)
+
+        # TODO: Save mask as new file
+        mask_pred_path = config['save_result'] + f"mask/{file_name}-Mask.png"
+        cv2.imwrite(mask_pred_path, (mskp*255).astype(np.uint8))
+
         if itter < 237 and save_samples:
             # TODO: Change result name
             # save_sample(img_path, msk.numpy()[0, 0], mskp, name=str(itter+1))
             save_sample(img_path, msk.numpy()[0, 0], mskp, name=file_name)
 
-
         gt_list.append(msk.numpy()[0, 0])
         pred_list.append(mskp)
+
+        # TODO: Classify
+        assert os.path.exists(mask_pred_path), "Image not found"
+
+        # cv2.imshow("MyMask", (mskp*255).astype(np.uint8))
+        # cv2.waitKey()
+
+        if len(pred_list) > 0:
+            classified_line = classify(mask_pred_path)
+            # classified_line = classify(msk)
+            logger.info(f"#Line: {len(classified_line)}")
+        else:
+            text = ["NOT FOUND"]
+            # write_line_list(text, file_name)
+
+
     print('Running time of each images: %ss' % (times/len(pred_list)))
 
 final_results = []

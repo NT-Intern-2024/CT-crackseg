@@ -9,6 +9,8 @@ from torch.utils.data import DataLoader
 from ptflops import get_model_complexity_info
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+from my_utils import *
+from my_classification import *
 
 setup_seed(42)
 number_classes = int(config["number_classes"])

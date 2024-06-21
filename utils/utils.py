@@ -32,7 +32,7 @@ def get_img_patches(img):
     patch_locs = []
 
     if img_height < img_width:
-        assert img_height < 2*input_height
+        # assert img_height < 2*input_height
         y_corner = [0, img_height-input_height, int(0.5*(img_height-input_height))]
         for y in y_corner:
             for x in range(0, img_width - input_width + 1, stride):
@@ -47,7 +47,7 @@ def get_img_patches(img):
                 patches.append(segment)
                 patch_locs.append((x, y))
     else:
-        assert img_width < 2*input_width
+        # assert img_width < 2*input_width
         x_corner = [0, img_width-input_width, int(0.5*(img_width-input_width))]
         for x in x_corner:
             for y in range(0, img_height - input_height + 1, stride):

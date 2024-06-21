@@ -7,10 +7,8 @@ epochs:                 100 # Number of epochs to train the model
 number_classes:         1 # Number of classes in the target dataset
 batch_size_tr:          2 # Batch size for train
 batch_size_va:          1 # Batch size for validation 
-#saved_model:            './checkpoints/weights_deepcrack.model'
-#saved_model_final:      './checkpoints/weights_deepcrack_final.model'
-saved_model:            './checkpoints/weights_stwcrack.model'
-saved_model_final:      './checkpoints/weights_stwcrack_final.model'
+saved_model:            './checkpoints/weights_deepcrack.model'
+saved_model_final:      './checkpoints/weights_deepcrack_final.model'
 
 # TODO: Add
 # path_to_tradata:        './DeepCrack/train' #path to dataset (./Crack500/train)
@@ -21,13 +19,9 @@ saved_model_final:      './checkpoints/weights_stwcrack_final.model'
 # path_to_valdata:        './data/palm/palm-all-fixed-w300-h380-negative/test'  #path to dataset 
 # path_to_testdata:       './data/palm/palm-all-fixed-w300-h380-negative/test'  #path to dataset
 
-#path_to_tradata:        './data/palm-manual/PalmAll_Manual_Thick3_300_400/train' 
-#path_to_valdata:        './data/palm-manual/PalmAll_Manual_Thick3_300_400/test'  
-#path_to_testdata:       './data/palm-manual/PalmAll_Manual_Thick3_300_400/test'  
-
-path_to_tradata:        './data/STWPalmCrack/train' 
-path_to_valdata:        './data/STWPalmCrack/test'  
-path_to_testdata:       './data/STWPalmCrack/test' 
+path_to_tradata:        './data/palm-manual/PalmAll_Manual_Thick3_300_400/train' 
+path_to_valdata:        './data/palm-manual/PalmAll_Manual_Thick3_300_400/test'  
+path_to_testdata:       './data/palm-manual/PalmAll_Manual_Thick3_300_400/test'  
 
 # path_to_testdata:   './data/palm/etc'
 
@@ -39,9 +33,7 @@ save_result:           './results/' # path to save results
 # save_result:           './results/manual-predict-' # path to save results.
 
 # Add
-#saved_model_log:       './checkpoints/log/all-fixed-w300-h380-negative-e50/weights_deepcrack.model'
-saved_model_log:       './checkpoints/log/stwcrack/weights_stwcrack.model'
+saved_model_log:       './checkpoints/log/all-fixed-w300-h380-negative-e50/weights_deepcrack.model'
 path_to_inference_data:  './data/palm/etc/'
 
-#results_path:          './results/all-manual-same-400-e100'
-results_path:          './results/stwcrack'
+results_path:          './results/all-manual-same-400-e100'

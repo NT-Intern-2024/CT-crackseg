@@ -36,8 +36,11 @@ class ImgToTensor(object):
 
 class MaskToTensor(object):
     def __call__(self, img):
-        return torch.from_numpy(img).long()
+        # TODO: Fix
+        # return torch.from_numpy(img).long()
 
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        return torch.from_numpy(img).long()
 
 class Crack_loader(Dataset):
     """ dataset class for Crack datasets
@@ -76,7 +79,10 @@ class Crack_loader(Dataset):
 
         mname = self.mask_fnames[i]
         mpath = os.path.join(self.mask_dir, mname)
-        mask = cv2.imread(mpath, cv2.COLOR_BGR2GRAY)                                  # H,W, np.uint8
+        
+        # TODO: Fix
+        # mask = cv2.imread(mpath, cv2.COLOR_BGR2GRAY)                                  # H,W, np.uint8
+        mask = cv2.imread(mpath)
 
         if self.isTrain:
             img  = cv2.resize(img, (256, 256), interpolation=cv2.INTER_CUBIC)         # (256,256,3) np.uint8
