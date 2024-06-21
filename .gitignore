@@ -1,7 +1,9 @@
 # Custom
+.idea
+.vscode
+__pycache__
 
 /DeepCrack
-__pycache__
 /results
 
 playground.py
